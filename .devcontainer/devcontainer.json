@@ -1,3 +1,4 @@
 {
+    // Contains `go` and vscode extensions to run in devcontainers
     "image": "mcr.microsoft.com/devcontainers/go"
 }
