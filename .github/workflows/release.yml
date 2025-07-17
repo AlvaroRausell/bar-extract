@@ -52,8 +52,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Move all binaries from artifact subdirectories to dist/
-          find ./dist -type f -exec mv {} ./dist/ \;
+          # Find all binaries inside artifact directories and upload them
+          find ./dist -type f -name 'bar-extract-*' -exec cp {} ./dist/ \;
+          # Remove artifact subdirectories
+          find ./dist -mindepth 1 -type d -exec rm -rf {} +
           ls -lh ./dist
           gh release create "${GITHUB_REF#refs/tags/}" ./dist/bar-extract-* --generate-notes
 
