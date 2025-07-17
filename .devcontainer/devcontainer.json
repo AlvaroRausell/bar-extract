@@ -1,4 +1,16 @@
 {
     // Contains `go` and vscode extensions to run in devcontainers
-    "image": "mcr.microsoft.com/devcontainers/go"
+    "image": "mcr.microsoft.com/devcontainers/go",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    },
+    "postCreateCommand": "./devcontainer/postCreateCommand.sh",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "github.vscode-github-actions",
+                "sanjulaganepola.github-local-actions"
+            ]
+        }
+    }
 }
