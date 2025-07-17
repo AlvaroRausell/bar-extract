@@ -1,0 +1,61 @@
+
+name: Create release
+
+on:
+  push:
+    tags:
+      - v*
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+      - name: Build
+        run: |
+          go build -v -o bar-extract-${{ matrix.os }} main.go
+      - name: Test
+        run: |
+          go test -v ./...
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: bar-extract-${{ matrix.os }}
+          path: bar-extract-${{ matrix.os }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Download all binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: ./dist
+      - name: List downloaded files
+        run: ls -lh ./dist
+      - name: Set up GitHub CLI
+        uses: cli/gh-action@v3
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Move all binaries from artifact subdirectories to dist/
+          find ./dist -type f -exec mv {} ./dist/ \;
+          ls -lh ./dist
+          gh release create "${GITHUB_REF#refs/tags/}" ./dist/bar-extract-* --generate-notes
+
