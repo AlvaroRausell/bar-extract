@@ -48,8 +48,6 @@ jobs:
           path: ./dist
       - name: List downloaded files
         run: ls -lh ./dist
-      - name: Set up GitHub CLI
-        uses: cli/gh-action@v3
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
