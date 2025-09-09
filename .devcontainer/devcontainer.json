@@ -1,0 +1,25 @@
+{
+    "name": "bar-extract-dev",
+    "image": "mcr.microsoft.com/devcontainers/go:latest",
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/common-utils:2": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "go.toolsManagement.autoUpdate": true,
+                "go.testFlags": [
+                    "-count=1"
+                ],
+                "go.lintTool": "golangci-lint"
+            },
+            "extensions": [
+                "golang.go",
+                "EditorConfig.EditorConfig"
+            ]
+        }
+    },
+    "remoteUser": "vscode",
+    "postCreateCommand": "go version && go mod tidy || true"
+}
